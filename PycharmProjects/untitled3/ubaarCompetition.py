@@ -7,15 +7,16 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
 
+
 def load_files():
     """load train and test data"""
     train = pd.read_csv("train.csv")
-    x = train[['ID', 'distanceKM', 'taxiDurationMin',
+    x = train[['ID','distanceKM', 'taxiDurationMin',
                'vehicleType', 'vehicleOption', 'weight', 'price']]
     x = np.reshape(x, (50000, 7))
 
     vehicleType = {'treili': 0, 'khavar': 1, 'joft': 2, 'tak': 3}
-    vehicleOption = {'kafi': 0, 'mosaghaf_felezi': 1, 'kompressi': 2, 'bari': 3,
+    vehicleOption = {'kafi': 9, 'mosaghaf_felezi': 1, 'kompressi': 2, 'bari': 3,
                      'labehdar': 4, 'yakhchali': 5, 'hichkodam': 6, 'mosaghaf_chadori': 7,
                      'transit_chadori': 8}
 
@@ -46,9 +47,7 @@ def load_files():
     # y = np.reshape(y, (50000, 1))
 
     train_x = x[0:34999]
-    # train_y = y[0:34999]
     test_x = x[35000:]
-    # test_y = y[35000:]
 
     return train_x, test_x
 
@@ -68,9 +67,9 @@ def twoD_PCA(df):
 
 def load_data():
     test = pd.read_csv("test.csv")
-    x = test[['ID', 'distanceKM', 'taxiDurationMin',
+    x = test[['ID', 'sourceLatitude', 'sourceLongitude', 'destinationLatitude', 'destinationLongitude','distanceKM', 'taxiDurationMin',
                'vehicleType', 'vehicleOption', 'weight']]
-    x = np.reshape(x, (15000, 6))
+    x = np.reshape(x, (15000, 10))
 
     vehicleType = {'treili': 0, 'khavar': 1, 'joft': 2, 'tak': 3}
     vehicleOption = {'kafi': 0, 'mosaghaf_felezi': 1, 'kompressi': 2, 'bari': 3,
@@ -143,25 +142,29 @@ treili_x, treili_y, treili_ID = seperate_x_from_y(treili)
 joft_x, joft_y, joft_ID = seperate_x_from_y(joft)
 tak_x, tak_y, tak_ID = seperate_x_from_y(tak)
 
-# khavar_test, treili_test, joft_test, tak_test = classifier(test)
-# khavar_tx, khavar_ty, khavar_tID = seperate_x_from_y(khavar_test)
-# treili_tx, treili_ty, treili_tID = seperate_x_from_y(treili_test)
-# joft_tx, joft_ty, joft_tID = seperate_x_from_y(joft_test)
-# tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
+khavar_test, treili_test, joft_test, tak_test = classifier(test)
+khavar_tx, khavar_ty, khavar_tID = seperate_x_from_y(khavar_test)
+treili_tx, treili_ty, treili_tID = seperate_x_from_y(treili_test)
+joft_tx, joft_ty, joft_tID = seperate_x_from_y(joft_test)
+tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
 
 
-true_test = load_data()
-khavar_test, treili_test, joft_test, tak_test = classifier(true_test)
-
-khavar_tx, khavar_tID = seperate_x_from_id(khavar_test)
-treili_tx, treili_tID = seperate_x_from_id(treili_test)
-joft_tx, joft_tID = seperate_x_from_id(joft_test)
-tak_tx, tak_tID = seperate_x_from_id(tak_test)
+# true_test = load_data()
+# khavar_test, treili_test, joft_test, tak_test = classifier(true_test)
+#
+# khavar_tx, khavar_tID = seperate_x_from_id(khavar_test)
+# treili_tx, treili_tID = seperate_x_from_id(treili_test)
+# joft_tx, joft_tID = seperate_x_from_id(joft_test)
+# tak_tx, tak_tID = seperate_x_from_id(tak_test)
 
 pred_khavar = regression(khavar_x, khavar_y, khavar_tx)
+pred_khavar = [int(x) for x in pred_khavar]
 pred_treili = regression(treili_x, treili_y, treili_tx)
+pred_treili = [int(x) for x in pred_treili]
 pred_joft = regression(joft_x, joft_y, joft_tx)
+pred_joft = [int(x) for x in pred_joft]
 pred_tak = regression(tak_x, tak_y, tak_tx)
+pred_tak = [int(x) for x in pred_tak]
 
 
 final_khavar = pd.DataFrame({'price': pred_khavar})
@@ -172,14 +175,14 @@ final_y_df = pd.concat([final_khavar, final_treili, final_joft, final_tak])
 final_list = final_y_df['price'].tolist()
 
 #
-# test_y = khavar_ty.append(treili_ty)
-# test_y = test_y.append(joft_ty)
-# test_y = test_y.append(tak_ty)
+test_y = khavar_ty.append(treili_ty)
+test_y = test_y.append(joft_ty)
+test_y = test_y.append(tak_ty)
 
 
 # print(len(test_y), len(final_list))
 #
-# print(np.mean(np.abs((test_y - final_list) / test_y)) * 100)
+print(np.mean(np.abs((test_y - final_list) / test_y)) * 100)
 
 
 df_khavar = concat_predic_and_ID(pred_khavar, khavar_tID)

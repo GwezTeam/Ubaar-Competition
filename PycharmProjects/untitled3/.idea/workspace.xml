@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="210da177-ee75-4e6e-9668-f76830065bfe" name="Default" comment="first submission...&#10;MAPE = 37">
-      <change afterPath="$PROJECT_DIR$/classification.py" afterDir="false" />
+    <list default="true" id="210da177-ee75-4e6e-9668-f76830065bfe" name="Default" comment="classification :D">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classification.py" beforeDir="false" afterPath="$PROJECT_DIR$/classification.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ubaarCompetition.py" beforeDir="false" afterPath="$PROJECT_DIR$/ubaarCompetition.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -14,22 +14,38 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Ubaar_Competition$ubaar.coverage" NAME="ubaar Coverage Results" MODIFIED="1527505748519" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Ubaar_Competition$classification.coverage" NAME="classification Coverage Results" MODIFIED="1527517664869" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Ubaar_Competition$ubaar.coverage" NAME="ubaar Coverage Results" MODIFIED="1527518236286" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="ubaarCompetition.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ubaarCompetition.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="188" column="31" selection-start-line="188" selection-start-column="31" selection-end-line="188" selection-end-column="31" />
+            <state relative-caret-position="666">
+              <caret line="131" column="36" selection-start-line="131" selection-start-column="36" selection-end-line="131" selection-end-column="36" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#1855#2005#0" />
-                <element signature="e#3275#3485#0" />
-                <element signature="e#3549#3614#0" />
-                <element signature="e#3703#3753#0" />
+                <element signature="e#237#1889#0" />
+                <element signature="e#1860#1968#0" />
+                <element signature="e#1993#2143#0" />
+                <element signature="e#2167#3269#0" />
+                <element signature="e#3328#3500#0" />
+                <element signature="e#3527#3714#0" />
+                <element signature="e#3748#3817#0" />
+                <element signature="e#3852#3899#0" />
+                <element signature="e#3941#4255#0" />
+                <element signature="e#4299#4346#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/venv/lib/python3.6/site-packages/keras/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="14184">
+              <caret line="811" column="66" selection-start-line="811" selection-start-column="66" selection-end-line="811" selection-end-column="66" />
             </state>
           </provider>
         </entry>
@@ -37,11 +53,10 @@
       <file leaf-file-name="classification.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/classification.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="537">
-              <caret line="42" column="46" lean-forward="true" selection-start-line="39" selection-start-column="3" selection-end-line="42" selection-end-column="46" />
+            <state relative-caret-position="429">
+              <caret line="38" column="3" lean-forward="true" selection-start-line="38" selection-start-column="3" selection-end-line="40" selection-end-column="24" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#253#361#0" />
               </folding>
             </state>
           </provider>
@@ -104,6 +119,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -115,7 +131,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -189,7 +204,7 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/classification.py" />
       <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
@@ -243,7 +258,14 @@
       <option name="project" value="LOCAL" />
       <updated>1527499625943</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="classification :D">
+      <created>1527505917285</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1527505917285</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -258,7 +280,7 @@
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32937366" />
       <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32937366" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.37041035" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2603834" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2630458" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" x="0" y="55" width="1920" height="1025" id="SciView" order="4" sideWeight="0.49919486" type="WINDOWED" weight="0.3514377" />
@@ -286,7 +308,8 @@
     </ignored-roots>
     <MESSAGE value="Extract Data" />
     <MESSAGE value="first submission...&#10;MAPE = 37" />
-    <option name="LAST_COMMIT_MESSAGE" value="first submission...&#10;MAPE = 37" />
+    <MESSAGE value="classification :D" />
+    <option name="LAST_COMMIT_MESSAGE" value="classification :D" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -296,14 +319,57 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/ubaarCompetition.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2610">
+          <caret line="154" selection-start-line="154" selection-start-column="2" selection-end-line="161" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#237#1889#0" />
+            <element signature="e#1860#1968#0" />
+            <element signature="e#1993#2143#0" />
+            <element signature="e#2167#3269#0" />
+            <element signature="e#3328#3500#0" />
+            <element signature="e#3527#3714#0" />
+            <element signature="e#3748#3817#0" />
+            <element signature="e#3852#3899#0" />
+            <element signature="e#3941#4255#0" />
+            <element signature="e#4299#4346#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/lib/python3.6/site-packages/keras/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="14598">
+          <caret line="811" column="66" lean-forward="true" selection-start-line="811" selection-start-column="66" selection-end-line="811" selection-end-column="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classification.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="63" selection-start-line="7" selection-start-column="63" selection-end-line="7" selection-end-column="63" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ubaarCompetition.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2052">
           <caret line="114" column="35" lean-forward="true" selection-start-line="114" selection-start-column="35" selection-end-line="114" selection-end-column="35" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1855#2005#0" />
-            <element signature="e#3275#3485#0" />
-            <element signature="e#3549#3614#0" />
-            <element signature="e#3703#3753#0" />
+            <element signature="e#237#1889#0" />
+            <element signature="e#1860#1968#0" />
+            <element signature="e#1993#2143#0" />
+            <element signature="e#2167#3269#0" />
+            <element signature="e#3328#3500#0" />
+            <element signature="e#3527#3714#0" />
+            <element signature="e#3748#3817#0" />
+            <element signature="e#3852#3899#0" />
+            <element signature="e#3941#4255#0" />
+            <element signature="e#4299#4346#0" />
           </folding>
         </state>
       </provider>
@@ -314,10 +380,16 @@
           <caret line="111" lean-forward="true" selection-start-line="111" selection-end-line="111" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1855#2005#0" />
-            <element signature="e#3275#3485#0" />
-            <element signature="e#3549#3614#0" />
-            <element signature="e#3703#3753#0" />
+            <element signature="e#237#1889#0" />
+            <element signature="e#1860#1968#0" />
+            <element signature="e#1993#2143#0" />
+            <element signature="e#2167#3269#0" />
+            <element signature="e#3328#3500#0" />
+            <element signature="e#3527#3714#0" />
+            <element signature="e#3748#3817#0" />
+            <element signature="e#3852#3899#0" />
+            <element signature="e#3941#4255#0" />
+            <element signature="e#4299#4346#0" />
           </folding>
         </state>
       </provider>
@@ -328,10 +400,16 @@
           <caret line="46" lean-forward="true" selection-start-line="46" selection-end-line="46" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1855#2005#0" />
-            <element signature="e#3275#3485#0" />
-            <element signature="e#3549#3614#0" />
-            <element signature="e#3703#3753#0" />
+            <element signature="e#237#1889#0" />
+            <element signature="e#1860#1968#0" />
+            <element signature="e#1993#2143#0" />
+            <element signature="e#2167#3269#0" />
+            <element signature="e#3328#3500#0" />
+            <element signature="e#3527#3714#0" />
+            <element signature="e#3748#3817#0" />
+            <element signature="e#3852#3899#0" />
+            <element signature="e#3941#4255#0" />
+            <element signature="e#4299#4346#0" />
           </folding>
         </state>
       </provider>
@@ -342,10 +420,16 @@
           <caret line="43" column="75" selection-start-line="43" selection-start-column="75" selection-end-line="43" selection-end-column="75" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1855#2005#0" />
-            <element signature="e#3275#3485#0" />
-            <element signature="e#3549#3614#0" />
-            <element signature="e#3703#3753#0" />
+            <element signature="e#237#1889#0" />
+            <element signature="e#1860#1968#0" />
+            <element signature="e#1993#2143#0" />
+            <element signature="e#2167#3269#0" />
+            <element signature="e#3328#3500#0" />
+            <element signature="e#3527#3714#0" />
+            <element signature="e#3748#3817#0" />
+            <element signature="e#3852#3899#0" />
+            <element signature="e#3941#4255#0" />
+            <element signature="e#4299#4346#0" />
           </folding>
         </state>
       </provider>
@@ -364,34 +448,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/classification_regression.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="0" />
+    <entry file="file://$PROJECT_DIR$/venv/classification_regression.ipynb" />
+    <entry file="file://$PROJECT_DIR$/venv/lib/python3.6/site-packages/keras/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="14184">
+          <caret line="811" column="66" selection-start-line="811" selection-start-column="66" selection-end-line="811" selection-end-column="66" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/classification.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="537">
-          <caret line="42" column="46" lean-forward="true" selection-start-line="39" selection-start-column="3" selection-end-line="42" selection-end-column="46" />
+        <state relative-caret-position="429">
+          <caret line="38" column="3" lean-forward="true" selection-start-line="38" selection-start-column="3" selection-end-line="40" selection-end-column="24" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#253#361#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ubaarCompetition.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="188" column="31" selection-start-line="188" selection-start-column="31" selection-end-line="188" selection-end-column="31" />
+        <state relative-caret-position="666">
+          <caret line="131" column="36" selection-start-line="131" selection-start-column="36" selection-end-line="131" selection-end-column="36" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1855#2005#0" />
-            <element signature="e#3275#3485#0" />
-            <element signature="e#3549#3614#0" />
-            <element signature="e#3703#3753#0" />
+            <element signature="e#237#1889#0" />
+            <element signature="e#1860#1968#0" />
+            <element signature="e#1993#2143#0" />
+            <element signature="e#2167#3269#0" />
+            <element signature="e#3328#3500#0" />
+            <element signature="e#3527#3714#0" />
+            <element signature="e#3748#3817#0" />
+            <element signature="e#3852#3899#0" />
+            <element signature="e#3941#4255#0" />
+            <element signature="e#4299#4346#0" />
           </folding>
         </state>
       </provider>
