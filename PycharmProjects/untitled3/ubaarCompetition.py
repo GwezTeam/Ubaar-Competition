@@ -26,13 +26,13 @@ def load_files():
     for column in x.columns:
         x[column] = x[column].fillna(np.mean(x[column]))
 
-    # normalize data
-    x = x.loc[:, ['distanceKM', 'taxiDurationMin',
-                  'vehicleType', 'vehicleOption', 'weight']]
-    # print(x)
-    x = StandardScaler().fit_transform(x)
-    x = pd.DataFrame(x, columns=['distanceKM', 'taxiDurationMin',
-                                 'vehicleType', 'vehicleOption', 'weight'])
+    # # normalize data
+    # x = x.loc[:, ['distanceKM', 'taxiDurationMin',
+    #               'vehicleType', 'vehicleOption', 'weight']]
+    # # print(x)
+    # x = StandardScaler().fit_transform(x)
+    # x = pd.DataFrame(x, columns=['distanceKM', 'taxiDurationMin',
+    #                              'vehicleType', 'vehicleOption', 'weight'])
 
     # # PCA
     # new_column = twoD_PCA(x[['distanceKM', 'taxiDurationMin']])
@@ -67,9 +67,7 @@ def twoD_PCA(df):
 def load_data():
     data = pd.read_csv('test.csv')
 
-    x = data[['date', 'sourceLatitude', 'sourceLongitude',
-              'destinationLatitude', 'destinationLongitude',
-              'distanceKM', 'taxiDurationMin',
+    x = data[['distanceKM', 'taxiDurationMin',
               'vehicleType', 'vehicleOption', 'weight']]
     id = data[['ID']]
     vehicleType = {'treili': 0, 'khavar': 1, 'joft': 2, 'tak': 3}
@@ -78,6 +76,18 @@ def load_data():
                      'transit_chadori': 8}
     x = encode(vehicleType, x, 'vehicleType')
     x = encode(vehicleOption, x, 'vehicleOption')
+
+    # fill nan
+    for column in x.columns:
+        x[column] = x[column].fillna(np.mean(x[column]))
+
+    # normalize data
+    # x = x.loc[:, ['distanceKM', 'taxiDurationMin',
+    #               'vehicleType', 'vehicleOption', 'weight']]
+    # # print(x)
+    # x = StandardScaler().fit_transform(x)
+    # x = pd.DataFrame(x, columns=['distanceKM', 'taxiDurationMin',
+    #                              'vehicleType', 'vehicleOption', 'weight'])
 
     return x, id
 
@@ -112,11 +122,14 @@ id_list = []
 for list in id_test.loc[:, 'ID']:
     id_list.append(list)
 
+
 y_pred = regression.predict(test_x)
+
 y_list = []
-for list in y_pred:
+for list, i in zip(y_pred, range(len(y_pred))):
     if list[0] < 0:
-        list[0] = -list[0]
+        # list[0] = abs(list[0])
+        print(test.loc[i,:], test_y[i], list[0])
     y_list.append(int(list[0]))
 
 # print(id_list)
@@ -125,7 +138,7 @@ for list in y_pred:
 s = pd.Series(y_list)
 # print(id_list)
 
-print(mean_absolute_percentage_error(test_y, y_list))
+# print(mean_absolute_percentage_error(test_y, y_list))
 # print(id_test.values)
 
 # print(len(id_list), len(y_list))
