@@ -26,7 +26,7 @@ def load_files():
                      'labehdar': 4, 'yakhchali': 5, 'hichkodam': 6, 'mosaghaf_chadori': 7,
                      'transit_chadori': 8}
 
-    # train = encode(vehicleType, train, 'vehicleType')
+    train = encode(vehicleType, train, 'vehicleType')
     train = encode(vehicleOption, train, 'vehicleOption')
 
     # fill nan
@@ -38,6 +38,11 @@ def load_files():
     for column, i in zip(train.columns, range(len(train.columns))):
         p = train[column] * train[column]
         train[column + "^2"] = p
+
+    for column, i in zip(train.columns, range(len(train.columns))):
+        for column2, i in zip(train.columns, range(len(train.columns))):
+            p = train[column] * train[column2]
+            train[column + "*" + column2] = p
     print(train.columns)
 
     model = linear_model.LinearRegression()
@@ -46,28 +51,6 @@ def load_files():
     print(fit.n_features_)
     print(fit.support_)
     print(fit.ranking_)
-
-    # new_train = mutual_info_regression(train, train_y)
-    # print(new_train[0,:], train.loc[0,:])
-    # print(new_train.shape)
-    # # normalize data
-    # train = train.loc[:, ['distanceKM', 'taxiDurationMin',
-    #                       'vehicleType', 'vehicleOption', 'weight']]
-    # # print(x)
-    # train = StandardScaler().fit_transform(train)
-    # train = pd.DataFrame(train, columns=['distanceKM', 'taxiDurationMin',
-    #                                      'vehicleType', 'vehicleOption', 'weight'])
-    #
-    # khavar = train[train['vehicleType'] == 'khavar']
-    # treili = train[train['vehicleType'] == 'treili']
-    # joft = train[train['vehicleType'] == 'joft']
-    # tak = train[train['vehicleType'] == 'tak']
-    #
-    # print(len(khavar), len(treili), len(joft), len(tak))
-
-    # train_x = train.drop(['price'], axis=1)
-    # train_y = train['price']
-    # print(train_y)
 
 
 load_files()
