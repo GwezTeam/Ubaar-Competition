@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sb
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-
+from xgboost import XGBClassifier
 
 
 def load_files():
@@ -157,42 +157,50 @@ tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
 # joft_tx, joft_tID = seperate_x_from_id(joft_test)
 # tak_tx, tak_tID = seperate_x_from_id(tak_test)
 
-pred_khavar = regression(khavar_x, khavar_y, khavar_tx)
-pred_khavar = [int(x) for x in pred_khavar]
-pred_treili = regression(treili_x, treili_y, treili_tx)
-pred_treili = [int(x) for x in pred_treili]
-pred_joft = regression(joft_x, joft_y, joft_tx)
-pred_joft = [int(x) for x in pred_joft]
-pred_tak = regression(tak_x, tak_y, tak_tx)
-pred_tak = [int(x) for x in pred_tak]
+# pred_khavar = regression(khavar_x, khavar_y, khavar_tx)
+# pred_khavar = [int(x) for x in pred_khavar]
+# pred_treili = regression(treili_x, treili_y, treili_tx)
+# pred_treili = [int(x) for x in pred_treili]
+# pred_joft = regression(joft_x, joft_y, joft_tx)
+# pred_joft = [int(x) for x in pred_joft]
+# pred_tak = regression(tak_x, tak_y, tak_tx)
+# pred_tak = [int(x) for x in pred_tak]
+
+model = XGBClassifier()
+train_x, train_y, train_id = seperate_x_from_y(train)
+model.fit(train_x, train_y)
+y_pred = model.predict(test)
+prediction = [round(value) for value in y_pred]
+accuracy = mean_absolute_percentage_error(train_y, prediction)
+print(accuracy)
 
 
-final_khavar = pd.DataFrame({'price': pred_khavar})
-final_treili = pd.DataFrame({'price': pred_treili})
-final_joft = pd.DataFrame({'price': pred_joft})
-final_tak = pd.DataFrame({'price': pred_tak})
-final_y_df = pd.concat([final_khavar, final_treili, final_joft, final_tak])
-final_list = final_y_df['price'].tolist()
-
+# final_khavar = pd.DataFrame({'price': pred_khavar})
+# final_treili = pd.DataFrame({'price': pred_treili})
+# final_joft = pd.DataFrame({'price': pred_joft})
+# final_tak = pd.DataFrame({'price': pred_tak})
+# final_y_df = pd.concat([final_khavar, final_treili, final_joft, final_tak])
+# final_list = final_y_df['price'].tolist()
 #
-test_y = khavar_ty.append(treili_ty)
-test_y = test_y.append(joft_ty)
-test_y = test_y.append(tak_ty)
-
-
-# print(len(test_y), len(final_list))
+# #
+# test_y = khavar_ty.append(treili_ty)
+# test_y = test_y.append(joft_ty)
+# test_y = test_y.append(tak_ty)
 #
-print(np.mean(np.abs((test_y - final_list) / test_y)) * 100)
-
-
-df_khavar = concat_predic_and_ID(pred_khavar, khavar_tID)
-df_treili = concat_predic_and_ID(pred_treili, treili_tID)
-df = pd.concat([df_khavar, df_treili])
-df = pd.concat([df, concat_predic_and_ID(pred_joft, joft_tID)])
-df = pd.concat([df, concat_predic_and_ID(pred_tak, tak_tID)])
-
-df.to_csv('submisiion.csv', index=False)
-
+#
+# # print(len(test_y), len(final_list))
+# #
+# print(np.mean(np.abs((test_y - final_list) / test_y)) * 100)
+#
+#
+# df_khavar = concat_predic_and_ID(pred_khavar, khavar_tID)
+# df_treili = concat_predic_and_ID(pred_treili, treili_tID)
+# df = pd.concat([df_khavar, df_treili])
+# df = pd.concat([df, concat_predic_and_ID(pred_joft, joft_tID)])
+# df = pd.concat([df, concat_predic_and_ID(pred_tak, tak_tID)])
+#
+# df.to_csv('submisiion.csv', index=False)
+#
 
 # print(df.describe())
 
