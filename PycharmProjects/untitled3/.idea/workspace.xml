@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="210da177-ee75-4e6e-9668-f76830065bfe" name="Default" comment="">
-      <change afterPath="$APPLICATION_CONFIG_DIR$/inspection/Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classification.py" beforeDir="false" afterPath="$PROJECT_DIR$/classification.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ubaarCompetition.py" beforeDir="false" afterPath="$PROJECT_DIR$/ubaarCompetition.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,34 +14,17 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/Ubaar_Competition$classification.coverage" NAME="classification Coverage Results" MODIFIED="1527520575056" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Ubaar_Competition$ubaar.coverage" NAME="ubaar Coverage Results" MODIFIED="1527595965189" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Ubaar_Competition$ubaar.coverage" NAME="ubaar Coverage Results" MODIFIED="1527609478802" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="ubaarCompetition.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ubaarCompetition.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="504">
-              <caret line="229" lean-forward="true" selection-start-line="229" selection-end-line="229" />
+            <state relative-caret-position="145">
+              <caret line="168" column="14" lean-forward="true" selection-start-line="168" selection-start-column="14" selection-end-line="168" selection-end-column="14" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#290#476#0" />
-                <element signature="e#487#1088#0" />
-                <element signature="e#1607#1625#0" />
-                <element signature="e#2495#2631#0" />
-                <element signature="e#2663#2820#0" />
-                <element signature="e#2844#3944#0" />
-                <element signature="e#2861#2975#0" />
-                <element signature="e#3191#3385#0" />
-                <element signature="e#3590#3608#0" />
-                <element signature="e#4003#4175#0" />
-                <element signature="e#4209#4452#0" />
-                <element signature="e#4493#4583#0" />
-                <element signature="e#4625#4686#0" />
-                <element signature="e#4728#5042#0" />
-                <element signature="e#4915#5024#0" />
-                <element signature="e#5086#5133#0" />
-                <element signature="e#5299#5899#0" />
               </folding>
             </state>
           </provider>
@@ -62,7 +42,7 @@
       <file leaf-file-name="classification.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/classification.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
+            <state relative-caret-position="396">
               <caret line="29" column="48" selection-start-line="29" selection-start-column="48" selection-end-line="29" selection-end-column="48" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
@@ -284,7 +264,21 @@
       <option name="project" value="LOCAL" />
       <updated>1527518385181</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="25.5">
+      <created>1527596157901</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1527596157901</updated>
+    </task>
+    <task id="LOCAL-00006" summary="18.56 :)))">
+      <created>1527599765846</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1527599765846</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -293,13 +287,13 @@
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info anchor="right" x="0" y="0" width="430" height="853" id="Documentation" order="5" sideWeight="0.50080514" side_tool="true" visible="true" weight="0.22949947" />
+      <window_info anchor="right" x="0" y="0" width="430" height="853" id="Documentation" order="5" sideWeight="0.50080514" side_tool="true" visible="true" weight="0.25612354" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32937366" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32937366" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32937366" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.37041035" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2683706" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27103302" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" x="0" y="55" width="1920" height="1025" id="SciView" order="4" sideWeight="0.49919486" type="WINDOWED" weight="0.3514377" />
@@ -329,7 +323,9 @@
     <MESSAGE value="first submission...&#10;MAPE = 37" />
     <MESSAGE value="classification :D" />
     <MESSAGE value="akharin talash haye 2shanbe vase behtar kardan MAPE :/&#10;ke hich tasiri nadasht" />
-    <option name="LAST_COMMIT_MESSAGE" value="akharin talash haye 2shanbe vase behtar kardan MAPE :/&#10;ke hich tasiri nadasht" />
+    <MESSAGE value="25.5" />
+    <MESSAGE value="18.56 :)))" />
+    <option name="LAST_COMMIT_MESSAGE" value="18.56 :)))" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -339,27 +335,37 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/ubaarCompetition.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3384">
+          <caret line="188" column="57" lean-forward="true" selection-start-line="188" selection-start-column="57" selection-end-line="188" selection-end-column="57" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/lib/python3.6/site-packages/keras/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="14598">
+          <caret line="811" column="66" selection-start-line="811" selection-start-column="66" selection-end-line="811" selection-end-column="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classification.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="522">
+          <caret line="29" column="48" selection-start-line="29" selection-start-column="48" selection-end-line="29" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ubaarCompetition.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="20" column="30" selection-start-line="20" selection-start-column="30" selection-end-line="20" selection-end-column="30" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#290#476#0" />
-            <element signature="e#487#1088#0" />
-            <element signature="e#1607#1625#0" />
-            <element signature="e#2495#2631#0" />
-            <element signature="e#2663#2820#0" />
-            <element signature="e#2844#3944#0" />
-            <element signature="e#2861#2975#0" />
-            <element signature="e#3191#3385#0" />
-            <element signature="e#3590#3608#0" />
-            <element signature="e#4003#4175#0" />
-            <element signature="e#4209#4452#0" />
-            <element signature="e#4493#4583#0" />
-            <element signature="e#4625#4686#0" />
-            <element signature="e#4728#5042#0" />
-            <element signature="e#4915#5024#0" />
-            <element signature="e#5086#5133#0" />
-            <element signature="e#5299#5899#0" />
           </folding>
         </state>
       </provider>
@@ -387,23 +393,6 @@
           <caret line="131" column="36" selection-start-line="131" selection-start-column="36" selection-end-line="131" selection-end-column="36" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#290#476#0" />
-            <element signature="e#487#1088#0" />
-            <element signature="e#1607#1625#0" />
-            <element signature="e#2495#2631#0" />
-            <element signature="e#2663#2820#0" />
-            <element signature="e#2844#3944#0" />
-            <element signature="e#2861#2975#0" />
-            <element signature="e#3191#3385#0" />
-            <element signature="e#3590#3608#0" />
-            <element signature="e#4003#4175#0" />
-            <element signature="e#4209#4452#0" />
-            <element signature="e#4493#4583#0" />
-            <element signature="e#4625#4686#0" />
-            <element signature="e#4728#5042#0" />
-            <element signature="e#4915#5024#0" />
-            <element signature="e#5086#5133#0" />
-            <element signature="e#5299#5899#0" />
           </folding>
         </state>
       </provider>
@@ -431,23 +420,6 @@
           <caret line="154" selection-start-line="154" selection-start-column="2" selection-end-line="161" selection-end-column="44" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#290#476#0" />
-            <element signature="e#487#1088#0" />
-            <element signature="e#1607#1625#0" />
-            <element signature="e#2495#2631#0" />
-            <element signature="e#2663#2820#0" />
-            <element signature="e#2844#3944#0" />
-            <element signature="e#2861#2975#0" />
-            <element signature="e#3191#3385#0" />
-            <element signature="e#3590#3608#0" />
-            <element signature="e#4003#4175#0" />
-            <element signature="e#4209#4452#0" />
-            <element signature="e#4493#4583#0" />
-            <element signature="e#4625#4686#0" />
-            <element signature="e#4728#5042#0" />
-            <element signature="e#4915#5024#0" />
-            <element signature="e#5086#5133#0" />
-            <element signature="e#5299#5899#0" />
           </folding>
         </state>
       </provider>
@@ -475,23 +447,6 @@
           <caret line="114" column="35" lean-forward="true" selection-start-line="114" selection-start-column="35" selection-end-line="114" selection-end-column="35" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#290#476#0" />
-            <element signature="e#487#1088#0" />
-            <element signature="e#1607#1625#0" />
-            <element signature="e#2495#2631#0" />
-            <element signature="e#2663#2820#0" />
-            <element signature="e#2844#3944#0" />
-            <element signature="e#2861#2975#0" />
-            <element signature="e#3191#3385#0" />
-            <element signature="e#3590#3608#0" />
-            <element signature="e#4003#4175#0" />
-            <element signature="e#4209#4452#0" />
-            <element signature="e#4493#4583#0" />
-            <element signature="e#4625#4686#0" />
-            <element signature="e#4728#5042#0" />
-            <element signature="e#4915#5024#0" />
-            <element signature="e#5086#5133#0" />
-            <element signature="e#5299#5899#0" />
           </folding>
         </state>
       </provider>
@@ -502,23 +457,6 @@
           <caret line="111" lean-forward="true" selection-start-line="111" selection-end-line="111" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#290#476#0" />
-            <element signature="e#487#1088#0" />
-            <element signature="e#1607#1625#0" />
-            <element signature="e#2495#2631#0" />
-            <element signature="e#2663#2820#0" />
-            <element signature="e#2844#3944#0" />
-            <element signature="e#2861#2975#0" />
-            <element signature="e#3191#3385#0" />
-            <element signature="e#3590#3608#0" />
-            <element signature="e#4003#4175#0" />
-            <element signature="e#4209#4452#0" />
-            <element signature="e#4493#4583#0" />
-            <element signature="e#4625#4686#0" />
-            <element signature="e#4728#5042#0" />
-            <element signature="e#4915#5024#0" />
-            <element signature="e#5086#5133#0" />
-            <element signature="e#5299#5899#0" />
           </folding>
         </state>
       </provider>
@@ -529,23 +467,6 @@
           <caret line="46" lean-forward="true" selection-start-line="46" selection-end-line="46" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#290#476#0" />
-            <element signature="e#487#1088#0" />
-            <element signature="e#1607#1625#0" />
-            <element signature="e#2495#2631#0" />
-            <element signature="e#2663#2820#0" />
-            <element signature="e#2844#3944#0" />
-            <element signature="e#2861#2975#0" />
-            <element signature="e#3191#3385#0" />
-            <element signature="e#3590#3608#0" />
-            <element signature="e#4003#4175#0" />
-            <element signature="e#4209#4452#0" />
-            <element signature="e#4493#4583#0" />
-            <element signature="e#4625#4686#0" />
-            <element signature="e#4728#5042#0" />
-            <element signature="e#4915#5024#0" />
-            <element signature="e#5086#5133#0" />
-            <element signature="e#5299#5899#0" />
           </folding>
         </state>
       </provider>
@@ -556,23 +477,6 @@
           <caret line="43" column="75" selection-start-line="43" selection-start-column="75" selection-end-line="43" selection-end-column="75" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#290#476#0" />
-            <element signature="e#487#1088#0" />
-            <element signature="e#1607#1625#0" />
-            <element signature="e#2495#2631#0" />
-            <element signature="e#2663#2820#0" />
-            <element signature="e#2844#3944#0" />
-            <element signature="e#2861#2975#0" />
-            <element signature="e#3191#3385#0" />
-            <element signature="e#3590#3608#0" />
-            <element signature="e#4003#4175#0" />
-            <element signature="e#4209#4452#0" />
-            <element signature="e#4493#4583#0" />
-            <element signature="e#4625#4686#0" />
-            <element signature="e#4728#5042#0" />
-            <element signature="e#4915#5024#0" />
-            <element signature="e#5086#5133#0" />
-            <element signature="e#5299#5899#0" />
           </folding>
         </state>
       </provider>
@@ -601,7 +505,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/classification.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
+        <state relative-caret-position="396">
           <caret line="29" column="48" selection-start-line="29" selection-start-column="48" selection-end-line="29" selection-end-column="48" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
@@ -611,27 +515,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ubaarCompetition.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="504">
-          <caret line="229" lean-forward="true" selection-start-line="229" selection-end-line="229" />
+        <state relative-caret-position="145">
+          <caret line="168" column="14" lean-forward="true" selection-start-line="168" selection-start-column="14" selection-end-line="168" selection-end-column="14" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#290#476#0" />
-            <element signature="e#487#1088#0" />
-            <element signature="e#1607#1625#0" />
-            <element signature="e#2495#2631#0" />
-            <element signature="e#2663#2820#0" />
-            <element signature="e#2844#3944#0" />
-            <element signature="e#2861#2975#0" />
-            <element signature="e#3191#3385#0" />
-            <element signature="e#3590#3608#0" />
-            <element signature="e#4003#4175#0" />
-            <element signature="e#4209#4452#0" />
-            <element signature="e#4493#4583#0" />
-            <element signature="e#4625#4686#0" />
-            <element signature="e#4728#5042#0" />
-            <element signature="e#4915#5024#0" />
-            <element signature="e#5086#5133#0" />
-            <element signature="e#5299#5899#0" />
           </folding>
         </state>
       </provider>

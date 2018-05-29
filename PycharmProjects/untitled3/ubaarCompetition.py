@@ -66,7 +66,7 @@ def load_files():
     train_x = x[0:34999]
     test_x = x[35000:]
 
-    return x, test_x
+    return train_x, test_x
 
 
 def encode(dic, dataFrame, column_name):
@@ -166,12 +166,12 @@ def fill_zero(df):
 
 
 def xgboost(x, y, tx, ty=None):
-    params = {'eta': 0.3, 'max_depth': 10, 'objective': 'reg:linear',
-              'eval_metric': 'mae', 'silent': False}
+    params = {'eta': 0.31, 'max_depth': 10, 'objective': 'reg:linear',
+              'eval_metric': 'mae', 'silent': True}
 
     watchlist = [(xgb.DMatrix(x, y), 'train')]
 
-    xgb_model = xgb.train(params, xgb.DMatrix(x, y), 100, watchlist, verbose_eval=10, maximize=False, early_stopping_rounds=20)
+    xgb_model = xgb.train(params, xgb.DMatrix(x, y), 200, watchlist, verbose_eval=100, maximize=False, early_stopping_rounds=20)
 
     pred = xgb_model.predict(xgb.DMatrix(tx), ntree_limit=xgb_model.best_ntree_limit)
     pred = [x for x in pred]
@@ -187,32 +187,33 @@ khavar, treili, joft, tak = classifier(train)
 
 khavar_x, khavar_y, khavar_ID = seperate_x_from_y(khavar)
 treili_x, treili_y, treili_ID = seperate_x_from_y(treili)
+
 joft_x, joft_y, joft_ID = seperate_x_from_y(joft)
 tak_x, tak_y, tak_ID = seperate_x_from_y(tak)
 
-# khavar_test, treili_test, joft_test, tak_test = classifier(test)
-# khavar_tx, khavar_ty, khavar_tID = seperate_x_from_y(khavar_test)
-# treili_tx, treili_ty, treili_tID = seperate_x_from_y(treili_test)
-# joft_tx, joft_ty, joft_tID = seperate_x_from_y(joft_test)
-# tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
+khavar_test, treili_test, joft_test, tak_test = classifier(test)
+khavar_tx, khavar_ty, khavar_tID = seperate_x_from_y(khavar_test)
+treili_tx, treili_ty, treili_tID = seperate_x_from_y(treili_test)
+joft_tx, joft_ty, joft_tID = seperate_x_from_y(joft_test)
+tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
 
-true_test = load_data()
-khavar_test, treili_test, joft_test, tak_test = classifier(true_test)
+# true_test = load_data()
+# khavar_test, treili_test, joft_test, tak_test = classifier(true_test)
+#
+# khavar_tx, khavar_tID = seperate_x_from_id(khavar_test)
+# treili_tx, treili_tID = seperate_x_from_id(treili_test)
+# joft_tx, joft_tID = seperate_x_from_id(joft_test)
+# tak_tx, tak_tID = seperate_x_from_id(tak_test)
 
-khavar_tx, khavar_tID = seperate_x_from_id(khavar_test)
-treili_tx, treili_tID = seperate_x_from_id(treili_test)
-joft_tx, joft_tID = seperate_x_from_id(joft_test)
-tak_tx, tak_tID = seperate_x_from_id(tak_test)
 
-
-pred_khavar = xgboost(khavar_x, khavar_y, khavar_tx)
+pred_khavar = xgboost(khavar_x, khavar_y, khavar_tx, khavar_ty)
 pred_khavar = [round(z) for z in pred_khavar]
 print(pred_khavar)
-pred_treili = xgboost(treili_x, treili_y, treili_tx)
+pred_treili = xgboost(treili_x, treili_y, treili_tx, treili_ty)
 pred_treili = [round(z) for z in pred_treili]
-pred_joft = xgboost(joft_x, joft_y, joft_tx)
+pred_joft = xgboost(joft_x, joft_y, joft_tx, joft_ty)
 pred_joft = [round(z) for z in pred_joft]
-pred_tak = xgboost(tak_x, tak_y, tak_tx)
+pred_tak = xgboost(tak_x, tak_y, tak_tx, tak_ty)
 pred_tak = [round(z) for z in pred_tak]
 
 
@@ -305,12 +306,12 @@ pred_tak = [round(z) for z in pred_tak]
 # final_list = [int(x[0]) for x in final_list]
 
 
-# final_list = pred_khavar + pred_treili + pred_joft + pred_tak
-# test_y = khavar_ty.append(treili_ty)
-# test_y = test_y.append(joft_ty)
-# test_y = test_y.append(tak_ty)
-# print(test_y, final_list)
-# print(np.mean(np.abs((test_y - final_list) / test_y)) * 100)
+final_list = pred_khavar + pred_treili + pred_joft + pred_tak
+test_y = khavar_ty.append(treili_ty)
+test_y = test_y.append(joft_ty)
+test_y = test_y.append(tak_ty)
+print(test_y, final_list)
+print(np.mean(np.abs((test_y - final_list) / test_y)) * 100)
 
 
 df_khavar = concat_predic_and_ID(pred_khavar, khavar_tID)
