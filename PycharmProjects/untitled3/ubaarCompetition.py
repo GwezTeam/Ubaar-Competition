@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from sklearn import linear_model
+from sklearn import linear_model, metrics
 import matplotlib.pyplot as plt
 import seaborn as sb
 from sklearn.preprocessing import StandardScaler
@@ -8,6 +8,7 @@ from sklearn.decomposition import PCA
 from keras.models import Sequential
 from keras.layers import Dense, Activation
 import tensorflow
+import xgboost as xgb
 
 
 vehicleType = {'treili': 0, 'khavar': 1, 'joft': 2, 'tak': 3}
@@ -28,9 +29,11 @@ state = {'تهران': 1310, 'اصفهان': 230, 'فارس': 29, 'همدان': 
 def load_files():
     """load train and test data"""
     train = pd.read_csv("train.csv")
-    x = train[['ID', 'SourceState', 'destinationState','distanceKM', 'taxiDurationMin',
+    x = train[['ID', 'sourceLatitude', 'sourceLongitude', 'destinationLatitude',
+               'destinationLongitude', 'SourceState',
+               'destinationState', 'distanceKM', 'taxiDurationMin',
                'vehicleType', 'vehicleOption', 'weight', 'price']]
-    x = np.reshape(x, (50000, 9))
+    x = np.reshape(x, (50000, 13))
 
     x = encode(state, x, 'SourceState')
     x = encode(state, x, 'destinationState')
@@ -63,7 +66,7 @@ def load_files():
     train_x = x[0:34999]
     test_x = x[35000:]
 
-    return train_x, test_x
+    return x, test_x
 
 
 def encode(dic, dataFrame, column_name):
@@ -81,14 +84,11 @@ def twoD_PCA(dataFrame):
 
 def load_data():
     test = pd.read_csv("test.csv")
-    x = test[['ID', 'SourceState', 'destinationState', 'distanceKM', 'taxiDurationMin',
+    x = test[['ID', 'sourceLatitude', 'sourceLongitude', 'destinationLatitude',
+               'destinationLongitude', 'SourceState',
+               'destinationState', 'distanceKM', 'taxiDurationMin',
                'vehicleType', 'vehicleOption', 'weight']]
-    x = np.reshape(x, (15000, 8))
-
-    vehicleType = {'treili': 0, 'khavar': 1, 'joft': 2, 'tak': 3}
-    vehicleOption = {'kafi': 0, 'mosaghaf_felezi': 1, 'kompressi': 2, 'bari': 3,
-                     'labehdar': 4, 'yakhchali': 5, 'hichkodam': 6, 'mosaghaf_chadori': 7,
-                     'transit_chadori': 8}
+    x = np.reshape(x, (15000, 12))
 
     x = encode(vehicleType, x, 'vehicleType')
     x = encode(vehicleOption, x, 'vehicleOption')
@@ -165,6 +165,23 @@ def fill_zero(df):
     return df
 
 
+def xgboost(x, y, tx, ty=None):
+    params = {'eta': 0.3, 'max_depth': 10, 'objective': 'reg:linear',
+              'eval_metric': 'mae', 'silent': False}
+
+    watchlist = [(xgb.DMatrix(x, y), 'train')]
+
+    xgb_model = xgb.train(params, xgb.DMatrix(x, y), 100, watchlist, verbose_eval=10, maximize=False, early_stopping_rounds=20)
+
+    pred = xgb_model.predict(xgb.DMatrix(tx), ntree_limit=xgb_model.best_ntree_limit)
+    pred = [x for x in pred]
+
+    if ty is not None:
+        true = ty.tolist()
+        print(mean_absolute_percentage_error(true, pred))
+    return pred
+
+
 train, test = load_files()
 khavar, treili, joft, tak = classifier(train)
 
@@ -173,99 +190,99 @@ treili_x, treili_y, treili_ID = seperate_x_from_y(treili)
 joft_x, joft_y, joft_ID = seperate_x_from_y(joft)
 tak_x, tak_y, tak_ID = seperate_x_from_y(tak)
 
-khavar_test, treili_test, joft_test, tak_test = classifier(test)
-khavar_tx, khavar_ty, khavar_tID = seperate_x_from_y(khavar_test)
-treili_tx, treili_ty, treili_tID = seperate_x_from_y(treili_test)
-joft_tx, joft_ty, joft_tID = seperate_x_from_y(joft_test)
-tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
+# khavar_test, treili_test, joft_test, tak_test = classifier(test)
+# khavar_tx, khavar_ty, khavar_tID = seperate_x_from_y(khavar_test)
+# treili_tx, treili_ty, treili_tID = seperate_x_from_y(treili_test)
+# joft_tx, joft_ty, joft_tID = seperate_x_from_y(joft_test)
+# tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
 
-# true_test = load_data()
-# khavar_test, treili_test, joft_test, tak_test = classifier(true_test)
+true_test = load_data()
+khavar_test, treili_test, joft_test, tak_test = classifier(true_test)
+
+khavar_tx, khavar_tID = seperate_x_from_id(khavar_test)
+treili_tx, treili_tID = seperate_x_from_id(treili_test)
+joft_tx, joft_tID = seperate_x_from_id(joft_test)
+tak_tx, tak_tID = seperate_x_from_id(tak_test)
+
+
+pred_khavar = xgboost(khavar_x, khavar_y, khavar_tx)
+pred_khavar = [round(z) for z in pred_khavar]
+print(pred_khavar)
+pred_treili = xgboost(treili_x, treili_y, treili_tx)
+pred_treili = [round(z) for z in pred_treili]
+pred_joft = xgboost(joft_x, joft_y, joft_tx)
+pred_joft = [round(z) for z in pred_joft]
+pred_tak = xgboost(tak_x, tak_y, tak_tx)
+pred_tak = [round(z) for z in pred_tak]
+
+
+
+"""Neuarl Network"""
+# # define and fit the final model
+# input_size = 11
+# #khavar
+# model = Sequential()
+# model.add(Dense(18, input_dim=input_size, activation='relu'))
+# model.add(Dense(18, activation='relu'))
+# model.add(Dense(18, activation='relu'))
+# model.add(Dense(1, activation='linear'))
+# model.compile(loss='mean_absolute_percentage_error', optimizer='rmsprop')
+# model.fit(khavar_x, khavar_y, epochs=50, verbose=1)
 #
-# khavar_tx, khavar_tID = seperate_x_from_id(khavar_test)
-# treili_tx, treili_tID = seperate_x_from_id(treili_test)
-# joft_tx, joft_tID = seperate_x_from_id(joft_test)
-# tak_tx, tak_tID = seperate_x_from_id(tak_test)
-
-
-
-
-
-
-
-# define and fit the final model
-input_size = 7
-#khavar
-model = Sequential()
-model.add(Dense(18, input_dim=input_size, activation='relu'))
-model.add(Dense(18, activation='relu'))
-model.add(Dense(18, activation='relu'))
-model.add(Dense(1, activation='linear'))
-model.compile(loss='mean_absolute_percentage_error', optimizer='rmsprop')
-model.fit(khavar_x, khavar_y, epochs=50, verbose=1)
-
-pred_khavar = model.predict(khavar_tx)
-pred_khavar = pred_khavar.tolist()
-pred_khavar = [int(z[0]) for z in pred_khavar]
-# print(pred_khavar)
-
-ty = khavar_ty.tolist()
-print("khavar : " + str(mean_absolute_percentage_error(ty, pred_khavar)))
-
-#joft
-model = Sequential()
-model.add(Dense(64, input_dim=input_size, activation='relu'))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(1, activation='linear'))
-model.compile(loss='mean_absolute_percentage_error', optimizer='rmsprop')
-model.fit(joft_x, joft_y, epochs=50, verbose=1)
-
-pred_joft = model.predict(joft_tx)
-pred_joft = pred_joft.tolist()
-pred_joft = [int(z[0]) for z in pred_joft]
-ty = joft_ty.tolist()
-print("joft : " + str(mean_absolute_percentage_error(ty, pred_joft)))
-# exit()
-
-# #treili
-model = Sequential()
-model.add(Dense(18, input_dim=input_size, activation='relu'))
-model.add(Dense(18, activation='relu'))
-model.add(Dense(18, activation='relu'))
-model.add(Dense(1, activation='linear'))
-model.compile(loss='mean_absolute_percentage_error', optimizer='rmsprop')
-model.fit(treili_x, treili_y, epochs=50, verbose=1)
-
-pred_treili = model.predict(treili_tx)
-pred_treili = pred_treili.tolist()
-pred_treili = [int(z[0]) for z in pred_treili]
-ty = treili_ty.tolist()
-print("treili : " + str(mean_absolute_percentage_error(ty, pred_treili)))
-
-
-#tak
-model = Sequential()
-model.add(Dense(18, input_dim=input_size, activation='relu'))
-model.add(Dense(18, activation='relu'))
-model.add(Dense(18, activation='relu'))
-model.add(Dense(1, activation='linear'))
-model.compile(loss='mean_absolute_percentage_error', optimizer='rmsprop')
-model.fit(tak_x, tak_y, epochs=50, verbose=1)
-
-pred_tak = model.predict(tak_tx)
-pred_tak = pred_tak.tolist()
-pred_tak = [int(z[0]) for z in pred_tak]
-ty = tak_ty.tolist()
-print("tak : " + str(mean_absolute_percentage_error(ty, pred_tak)))
-
-
-
-
-
-
-
-
+# pred_khavar = model.predict(khavar_tx)
+# pred_khavar = pred_khavar.tolist()
+# pred_khavar = [int(z[0]) for z in pred_khavar]
+# # print(pred_khavar)
+#
+# ty = khavar_ty.tolist()
+# print("khavar : " + str(mean_absolute_percentage_error(ty, pred_khavar)))
+# # exit()
+# #joft
+# model = Sequential()
+# model.add(Dense(64, input_dim=input_size, activation='relu'))
+# model.add(Dense(64, activation='relu'))
+# model.add(Dense(64, activation='relu'))
+# model.add(Dense(1, activation='linear'))
+# model.compile(loss='mean_absolute_percentage_error', optimizer='rmsprop')
+# model.fit(joft_x, joft_y, epochs=50, verbose=1)
+#
+# pred_joft = model.predict(joft_tx)
+# pred_joft = pred_joft.tolist()
+# pred_joft = [int(z[0]) for z in pred_joft]
+# ty = joft_ty.tolist()
+# print("joft : " + str(mean_absolute_percentage_error(ty, pred_joft)))
+# # exit()
+#
+# # #treili
+# model = Sequential()
+# model.add(Dense(18, input_dim=input_size, activation='relu'))
+# model.add(Dense(18, activation='relu'))
+# model.add(Dense(18, activation='relu'))
+# model.add(Dense(1, activation='linear'))
+# model.compile(loss='mean_absolute_percentage_error', optimizer='rmsprop')
+# model.fit(treili_x, treili_y, epochs=50, verbose=1)
+#
+# pred_treili = model.predict(treili_tx)
+# pred_treili = pred_treili.tolist()
+# pred_treili = [int(z[0]) for z in pred_treili]
+# ty = treili_ty.tolist()
+# print("treili : " + str(mean_absolute_percentage_error(ty, pred_treili)))
+#
+#
+# #tak
+# model = Sequential()
+# model.add(Dense(18, input_dim=input_size, activation='relu'))
+# model.add(Dense(18, activation='relu'))
+# model.add(Dense(18, activation='relu'))
+# model.add(Dense(1, activation='linear'))
+# model.compile(loss='mean_absolute_percentage_error', optimizer='rmsprop')
+# model.fit(tak_x, tak_y, epochs=50, verbose=1)
+#
+# pred_tak = model.predict(tak_tx)
+# pred_tak = pred_tak.tolist()
+# pred_tak = [int(z[0]) for z in pred_tak]
+# ty = tak_ty.tolist()
+# print("tak : " + str(mean_absolute_percentage_error(ty, pred_tak)))
 
 
 """linear regression"""
@@ -287,14 +304,13 @@ print("tak : " + str(mean_absolute_percentage_error(ty, pred_tak)))
 # final_list = final_y_df['price'].tolist()
 # final_list = [int(x[0]) for x in final_list]
 
-"""Neural Network"""
-final_list = []
-final_list = pred_khavar + pred_treili + pred_joft + pred_tak
-test_y = khavar_ty.append(treili_ty)
-test_y = test_y.append(joft_ty)
-test_y = test_y.append(tak_ty)
-print(test_y, final_list)
-print(np.mean(np.abs((test_y - final_list) / test_y)) * 100)
+
+# final_list = pred_khavar + pred_treili + pred_joft + pred_tak
+# test_y = khavar_ty.append(treili_ty)
+# test_y = test_y.append(joft_ty)
+# test_y = test_y.append(tak_ty)
+# print(test_y, final_list)
+# print(np.mean(np.abs((test_y - final_list) / test_y)) * 100)
 
 
 df_khavar = concat_predic_and_ID(pred_khavar, khavar_tID)
