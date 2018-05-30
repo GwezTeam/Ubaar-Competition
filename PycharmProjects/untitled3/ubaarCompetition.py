@@ -157,7 +157,7 @@ def fill_zero(train, test):
 
 
 def xgboost(x, y, tx, ty=None):
-    params = {'eta': 0.1, 'max_depth': 10, 'objective': 'reg:linear',
+    params = {'eta': 0.07, 'max_depth': 10, 'objective': 'reg:linear',
               'eval_metric': 'mae', 'silent': True}
 
     watchlist = [(xgb.DMatrix(x, y), 'train')]
