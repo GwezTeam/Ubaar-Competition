@@ -1,13 +1,13 @@
 import numpy as np
 import pandas as pd
 from sklearn import linear_model, metrics
-import matplotlib.pyplot as plt
-import seaborn as sb
-from sklearn.preprocessing import StandardScaler
+# import matplotlib.pyplot as plt
+# import seaborn as sb
+# from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-from keras.models import Sequential
-from keras.layers import Dense, Activation
-import tensorflow
+# from keras.models import Sequential
+# from keras.layers import Dense, Activation
+# import tensorflow
 import xgboost as xgb
 
 
@@ -148,30 +148,21 @@ def concat_predic_and_ID(price, id):
     return pd.DataFrame({'ID': id, 'price': price})
 
 
-def fill_zero(df):
-    df['price'] = df['price'] / df['weight']
-    df_non_zero = df[df['SourceState'] == df['destinationState']]
-    df_non_zero = df_non_zero[df_non_zero['distanceKM'] != 0]
-    price_mean = df_non_zero.groupby(['vehicleType']).price.mean()
-    distance_mean = df_non_zero.groupby(['vehicleType']).distanceKM.mean()
-    idx_zero_distnce = df[df['distanceKM'] == 0].index
-    print(price_mean)
-
-    print(distance_mean)
-    for i in idx_zero_distnce:
-        df.loc[i, 'distanceKM'] = (distance_mean[df.loc[i, 'vehicleType']] * df.loc[i, 'price']) /\
-                                  price_mean[df.loc[i, 'vehicleType']]
-
-    return df
+def fill_zero(train, test):
+    zero_train = train[train['distanceKM'] == 0].index
+    train.loc[list(zero_train),'distanceKM' ] = 300
+    zero_test = test[test['distanceKM'] == 0].index
+    test.loc[list(zero_test), 'distanceKM'] = 300
+    return train, test
 
 
 def xgboost(x, y, tx, ty=None):
-    params = {'eta': 0.31, 'max_depth': 10, 'objective': 'reg:linear',
+    params = {'eta': 0.1, 'max_depth': 10, 'objective': 'reg:linear',
               'eval_metric': 'mae', 'silent': True}
 
     watchlist = [(xgb.DMatrix(x, y), 'train')]
 
-    xgb_model = xgb.train(params, xgb.DMatrix(x, y), 200, watchlist, verbose_eval=100, maximize=False, early_stopping_rounds=20)
+    xgb_model = xgb.train(params, xgb.DMatrix(x, y), 300, watchlist, verbose_eval=100, maximize=False, early_stopping_rounds=60)
 
     pred = xgb_model.predict(xgb.DMatrix(tx), ntree_limit=xgb_model.best_ntree_limit)
     pred = [x for x in pred]
@@ -183,6 +174,7 @@ def xgboost(x, y, tx, ty=None):
 
 
 train, test = load_files()
+train , test = fill_zero(train, test)
 khavar, treili, joft, tak = classifier(train)
 
 khavar_x, khavar_y, khavar_ID = seperate_x_from_y(khavar)
