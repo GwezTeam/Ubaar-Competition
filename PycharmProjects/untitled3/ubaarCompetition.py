@@ -50,6 +50,25 @@ def set_day(df):
     return df
 
 
+def set_x(df, lat, lon):
+    a = df[[lat]].applymap(lambda z: np.cos(z))
+    b = df[[lon]].applymap(lambda z: np.cos(z))
+    df['x'] = np.add(a, b)
+    return df
+
+
+def set_y(df, lat, lon):
+    a = df[[lat]].applymap(lambda z: np.cos(z))
+    b = df[[lon]].applymap(lambda z: np.sin(z))
+    df['y'] = np.add(a, b)
+    return df
+
+
+def set_z(df, lat):
+    df['z'] = df[[lat]].applymap(lambda z: np.sin(z))
+    return df
+
+
 def load_files():
     """load train and test data"""
     train = pd.read_csv("train.csv")
@@ -66,6 +85,14 @@ def load_files():
     x = set_day(x)
     x = set_month(x)
     x = x.drop(['date'], axis=1)
+    # x = set_x(x, 'sourceLatitude', 'sourceLongitude')
+    # x = set_y(x, 'sourceLatitude', 'sourceLongitude')
+    # x = set_z(x, 'sourceLatitude')
+    # x = set_x(x, 'destinationLatitude', 'destinationLongitude')
+    # x = set_y(x, 'destinationLatitude', 'destinationLongitude')
+    # x = set_z(x, 'destinationLatitude')
+    # x = x.drop(['sourceLatitude', 'sourceLongitude', 'destinationLatitude', 'destinationLongitude'], axis=1)
+    # print(x)
     # fill nan
     for column in x.columns:
         x[column] = x[column].fillna(np.mean(x[column]))
@@ -91,6 +118,8 @@ def load_files():
 
     train_x = x[0:34999]
     test_x = x[35000:]
+
+    # train_x = pd.DataFrame.sort_values(train_x, ['month', 'day'], axis=0)
 
     return train_x, test_x
 
@@ -196,14 +225,25 @@ def concat_predic_and_ID(price, id):
 
 def fill_zero(train, test):
     zero_train = train[train['distanceKM'] == 0].index
-    train.loc[list(zero_train),'distanceKM'] = 300
+    train.loc[list(zero_train),'distanceKM'] = 600
     zero_test = test[test['distanceKM'] == 0].index
-    test.loc[list(zero_test), 'distanceKM'] = 300
+    test.loc[list(zero_test), 'distanceKM'] = 600
+
+    # zero_train = train[train['taxiDurationMin'] == 0].index
+    # zero_train2 = train[train['vehicleType'] == 3].index
+    # zero_train3 = train[train['vehicleType'] != 3].index
+    # train.loc[list(set(list(zero_train)).intersection(list(zero_train2))),'taxiDurationMin'] = 60
+    # train.loc[list(set(list(zero_train)).intersection(list(zero_train3))),'taxiDurationMin'] = 70
+    # zero_test = test[test['taxiDurationMin'] == 0].index
+    # zero_test2 = test[test['vehicleType'] == 3].index
+    # zero_test3 = test[test['vehicleType'] != 3].index
+    # test.loc[list(set(list(zero_test)).intersection(list(zero_test2))), 'taxiDurationMin'] = 60
+    # test.loc[list(set(list(zero_test)).intersection(list(zero_test3))), 'taxiDurationMin'] = 70
     return train, test
 
 
-def xgboost(num, max_depth, x, y, tx, ty=None):
-    params = {'eta': 0.01, 'max_depth': max_depth, 'objective': 'reg:linear',
+def xgboost(eta, num, max_depth, x, y, tx, ty=None):
+    params = {'eta': eta, 'max_depth': max_depth, 'objective': 'reg:linear',
               'eval_metric': 'mae', 'min_child_weight': 2,
               'silent': True}
 
@@ -258,14 +298,14 @@ tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
 # tak_tx, tak_tID = seperate_x_from_id(tak_test)
 
 
-pred_khavar = xgboost(350, 25, khavar_x, khavar_y, khavar_tx, khavar_ty)
+pred_khavar = xgboost(0.01, 350, 25, khavar_x, khavar_y, khavar_tx, khavar_ty)
 pred_khavar = [round(z) for z in pred_khavar]
 print(pred_khavar)
-pred_treili = xgboost(300, 15, treili_x, treili_y, treili_tx, treili_ty)
+pred_treili = xgboost(0.01, 300, 15, treili_x, treili_y, treili_tx, treili_ty)
 pred_treili = [round(z) for z in pred_treili]
-pred_joft = xgboost(300, 15, joft_x, joft_y, joft_tx, joft_ty)
+pred_joft = xgboost(0.005, 665, 15, joft_x, joft_y, joft_tx, joft_ty)
 pred_joft = [round(z) for z in pred_joft]
-pred_tak = xgboost(300, 15, tak_x, tak_y, tak_tx, tak_ty)
+pred_tak = xgboost(0.01, 300, 15, tak_x, tak_y, tak_tx, tak_ty)
 pred_tak = [round(z) for z in pred_tak]
 
 
