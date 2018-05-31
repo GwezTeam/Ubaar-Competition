@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 from sklearn import linear_model, metrics
-# import matplotlib.pyplot as plt
-# import seaborn as sb
-# from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+import seaborn as sb
+from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 # from keras.models import Sequential
 # from keras.layers import Dense, Activation
@@ -26,20 +26,46 @@ state = {'تهران': 1310, 'اصفهان': 230, 'فارس': 29, 'همدان': 
                'کهگیلویه و بویراحمد': 2, 'خراسان جنوبی': 1}
 
 
+def changet(t):
+    x = t - 960000
+    # print(x)
+    z = int(x / 100)
+    y = x % 100
+    # print(z, y)
+    return (z * 30) + y
+
+
+def change_time(df):
+    df.loc[:, df.columns == 'date'] = df[['date']].applymap(lambda z: changet(z))
+    return df
+
+
+def set_month(df):
+    df['month'] = df[['date']].applymap(lambda z: int((z - 960000) / 100))
+    return df
+
+
+def set_day(df):
+    df['day'] = df[['date']].applymap(lambda z: int((z - 960000) / 100))
+    return df
+
+
 def load_files():
     """load train and test data"""
     train = pd.read_csv("train.csv")
-    x = train[['ID', 'sourceLatitude', 'sourceLongitude', 'destinationLatitude',
+    x = train[['ID', 'date', 'sourceLatitude', 'sourceLongitude', 'destinationLatitude',
                'destinationLongitude', 'SourceState',
                'destinationState', 'distanceKM', 'taxiDurationMin',
                'vehicleType', 'vehicleOption', 'weight', 'price']]
-    x = np.reshape(x, (50000, 13))
+    x = np.reshape(x, (50000, 14))
 
     x = encode(state, x, 'SourceState')
     x = encode(state, x, 'destinationState')
     x = encode(vehicleType, x, 'vehicleType')
     x = encode(vehicleOption, x, 'vehicleOption')
-
+    x = set_day(x)
+    x = set_month(x)
+    x = x.drop(['date'], axis=1)
     # fill nan
     for column in x.columns:
         x[column] = x[column].fillna(np.mean(x[column]))
@@ -69,6 +95,23 @@ def load_files():
     return train_x, test_x
 
 
+def normalize(df):
+    # normalize data
+    # df = df.loc[:, ['distanceKM', 'taxiDurationMin',
+    #               'vehicleType', 'vehicleOption', 'weight']]
+    # print(x)
+    df = StandardScaler().fit_transform(df)
+    # x = pd.DataFrame(x, columns=['distanceKM', 'taxiDurationMin',
+    #                              'vehicleType', 'vehicleOption', 'weight'])
+    df = pd.DataFrame(df, columns=['date', 'sourceLatitude', 'sourceLongitude', 'destinationLatitude',
+               'destinationLongitude', 'SourceState',
+               'destinationState', 'distanceKM', 'taxiDurationMin',
+               'vehicleType', 'vehicleOption', 'weight'])
+    # sb.pairplot(df)
+    # plt.show()
+    return df
+
+
 def encode(dic, dataFrame, column_name):
     dataFrame.loc[:, dataFrame.columns == column_name] = dataFrame[[column_name]] \
         .applymap(lambda z: dic[z])
@@ -84,16 +127,19 @@ def twoD_PCA(dataFrame):
 
 def load_data():
     test = pd.read_csv("test.csv")
-    x = test[['ID', 'sourceLatitude', 'sourceLongitude', 'destinationLatitude',
+    x = test[['ID', 'date', 'sourceLatitude', 'sourceLongitude', 'destinationLatitude',
                'destinationLongitude', 'SourceState',
                'destinationState', 'distanceKM', 'taxiDurationMin',
                'vehicleType', 'vehicleOption', 'weight']]
-    x = np.reshape(x, (15000, 12))
+    x = np.reshape(x, (15000, 13))
 
     x = encode(vehicleType, x, 'vehicleType')
     x = encode(vehicleOption, x, 'vehicleOption')
     x = encode(state, x, 'SourceState')
     x = encode(state, x, 'destinationState')
+    x = set_day(x)
+    x = set_month(x)
+    x = x.drop(['date'], axis=1)
     # fill nan
     for column in x.columns:
         x[column] = x[column].fillna(np.mean(x[column]))
@@ -150,26 +196,26 @@ def concat_predic_and_ID(price, id):
 
 def fill_zero(train, test):
     zero_train = train[train['distanceKM'] == 0].index
-    train.loc[list(zero_train),'distanceKM' ] = 300
+    train.loc[list(zero_train),'distanceKM'] = 300
     zero_test = test[test['distanceKM'] == 0].index
     test.loc[list(zero_test), 'distanceKM'] = 300
     return train, test
 
 
-def xgboost(x, y, tx, ty=None):
-    params = {'eta': 0.1, 'max_depth': 10, 'objective': 'reg:linear',
-              'eval_metric': 'mae', 'silent': True}
+def xgboost(num, max_depth, x, y, tx, ty=None):
+    params = {'eta': 0.01, 'max_depth': max_depth, 'objective': 'reg:linear',
+              'eval_metric': 'mae', 'min_child_weight': 2,
+              'silent': True}
 
     watchlist = [(xgb.DMatrix(x, y), 'train')]
 
-    xgb_model = xgb.train(params, xgb.DMatrix(x, y), 300, watchlist, verbose_eval=100, maximize=False, early_stopping_rounds=60)
-
+    xgb_model = xgb.train(params, xgb.DMatrix(x, y), num, watchlist, verbose_eval=100, maximize=False)
     pred = xgb_model.predict(xgb.DMatrix(tx), ntree_limit=xgb_model.best_ntree_limit)
     pred = [x for x in pred]
 
     if ty is not None:
         true = ty.tolist()
-        print(mean_absolute_percentage_error(true, pred))
+        print("MAPE :" + str(mean_absolute_percentage_error(true, pred)))
     return pred
 
 
@@ -179,15 +225,29 @@ khavar, treili, joft, tak = classifier(train)
 
 khavar_x, khavar_y, khavar_ID = seperate_x_from_y(khavar)
 treili_x, treili_y, treili_ID = seperate_x_from_y(treili)
-
 joft_x, joft_y, joft_ID = seperate_x_from_y(joft)
 tak_x, tak_y, tak_ID = seperate_x_from_y(tak)
+
+
+# khavar_x = normalize(khavar_x)
+# treili_x = normalize(treili_x)
+# joft_x = normalize(joft_x)
+# tak_x = normalize(tak_x)
+
 
 khavar_test, treili_test, joft_test, tak_test = classifier(test)
 khavar_tx, khavar_ty, khavar_tID = seperate_x_from_y(khavar_test)
 treili_tx, treili_ty, treili_tID = seperate_x_from_y(treili_test)
 joft_tx, joft_ty, joft_tID = seperate_x_from_y(joft_test)
 tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
+
+
+# khavar_tx = normalize(khavar_tx)
+# treili_tx = normalize(treili_tx)
+# joft_tx = normalize(joft_tx)
+# tak_tx = normalize(tak_tx)
+
+
 
 # true_test = load_data()
 # khavar_test, treili_test, joft_test, tak_test = classifier(true_test)
@@ -198,14 +258,14 @@ tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
 # tak_tx, tak_tID = seperate_x_from_id(tak_test)
 
 
-pred_khavar = xgboost(khavar_x, khavar_y, khavar_tx, khavar_ty)
+pred_khavar = xgboost(350, 25, khavar_x, khavar_y, khavar_tx, khavar_ty)
 pred_khavar = [round(z) for z in pred_khavar]
 print(pred_khavar)
-pred_treili = xgboost(treili_x, treili_y, treili_tx, treili_ty)
+pred_treili = xgboost(300, 15, treili_x, treili_y, treili_tx, treili_ty)
 pred_treili = [round(z) for z in pred_treili]
-pred_joft = xgboost(joft_x, joft_y, joft_tx, joft_ty)
+pred_joft = xgboost(300, 15, joft_x, joft_y, joft_tx, joft_ty)
 pred_joft = [round(z) for z in pred_joft]
-pred_tak = xgboost(tak_x, tak_y, tak_tx, tak_ty)
+pred_tak = xgboost(300, 15, tak_x, tak_y, tak_tx, tak_ty)
 pred_tak = [round(z) for z in pred_tak]
 
 
@@ -302,7 +362,7 @@ final_list = pred_khavar + pred_treili + pred_joft + pred_tak
 test_y = khavar_ty.append(treili_ty)
 test_y = test_y.append(joft_ty)
 test_y = test_y.append(tak_ty)
-print(test_y, final_list)
+# print(test_y, final_list)
 print(np.mean(np.abs((test_y - final_list) / test_y)) * 100)
 
 
