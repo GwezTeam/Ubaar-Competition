@@ -3,27 +3,53 @@ import pandas as pd
 from sklearn import linear_model, metrics
 import matplotlib.pyplot as plt
 import seaborn as sb
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
 from sklearn.decomposition import PCA
 # from keras.models import Sequential
 # from keras.layers import Dense, Activation
 # import tensorflow
 import xgboost as xgb
 
-
-vehicleType = {'treili': 0, 'khavar': 1, 'joft': 2, 'tak': 3}
-vehicleOption = {'kafi': 9, 'mosaghaf_felezi': 1, 'kompressi': 2, 'bari': 3,
-                 'labehdar': 4, 'yakhchali': 5, 'hichkodam': 6, 'mosaghaf_chadori': 7,
-                 'transit_chadori': 8}
+vehicleType = {'treili': 20, 'khavar': 5, 'joft': 12, 'tak': 10}
+vehicleOption = {'kafi': 10, 'mosaghaf_felezi': 100, 'kompressi': 75, 'bari': 30,
+                 'labehdar': 24, 'yakhchali': 170, 'hichkodam': 0, 'mosaghaf_chadori': 45,
+                 'transit_chadori': 111}
 state = {'تهران': 1310, 'اصفهان': 230, 'فارس': 29, 'همدان': 28,
-               'البرز': 27, 'گیلان': 26, 'زنجان': 25, 'چهارمحال و بختیاری': 24,
-               'کردستان': 23, 'کرمان': 22, 'یزد': 21, 'لرستان': 20,
-               'آذربایجان شرقی': 19, 'خراسان رضوی': 18, 'کرمانشاه': 17,
-               'قزوین': 16, 'مرکزی': 15, 'سمنان': 14, 'گلستان': 13,
-               'سیستان و بلوچستان': 12, 'خوزستان': 11, 'بوشهر': 10,
-               'ایلام': 9, 'اردبیل': 8, 'قم': 7, 'مازندران': 6,
-               'هرمزگان': 5, 'آذربایجان غربی': 4, 'خراسان شمالی': 3,
-               'کهگیلویه و بویراحمد': 2, 'خراسان جنوبی': 1}
+         'البرز': 27, 'گیلان': 26, 'زنجان': 25, 'چهارمحال و بختیاری': 24,
+         'کردستان': 23, 'کرمان': 22, 'یزد': 21, 'لرستان': 20,
+         'آذربایجان شرقی': 19, 'خراسان رضوی': 18, 'کرمانشاه': 17,
+         'قزوین': 16, 'مرکزی': 15, 'سمنان': 14, 'گلستان': 13,
+         'سیستان و بلوچستان': 12, 'خوزستان': 11, 'بوشهر': 10,
+         'ایلام': 9, 'اردبیل': 8, 'قم': 7, 'مازندران': 6,
+         'هرمزگان': 5, 'آذربایجان غربی': 4, 'خراسان شمالی': 3,
+         'کهگیلویه و بویراحمد': 2, 'خراسان جنوبی': 1}
+
+
+def ont_hot_encoding(df):
+    # data = ['cold', 'cold', 'warm', 'cold', 'hot', 'hot', 'warm', 'cold', 'warm', 'hot']
+    data = df['vehicleOption']
+    # print(data.type)
+    # exit()
+    values = np.array(data)
+    # print(values)
+    # integer encode
+    label_encoder = LabelEncoder()
+    integer_encoded = label_encoder.fit_transform(values)
+    # print(integer_encoded)
+    # binary encode
+    onehot_encoder = OneHotEncoder(sparse=False)
+    integer_encoded = integer_encoded.reshape(len(integer_encoded), 1)
+    onehot_encoded = onehot_encoder.fit_transform(integer_encoded)
+    # print(onehot_encoded)
+    onehot_encoded = onehot_encoded.T
+    # print(onehot_encoded)
+    # print(onehot_encoded[0:1][0])
+    df = df.drop(['vehicleOption'], axis=1)
+    for i in range(9):
+        df[str(i)] = onehot_encoded[0:i + 1][0]
+    # invert first example
+    inverted = label_encoder.inverse_transform([np.argmax(onehot_encoded[0, :])])
+    return df
 
 
 def changet(t):
@@ -46,7 +72,7 @@ def set_month(df):
 
 
 def set_day(df):
-    df['day'] = df[['date']].applymap(lambda z: int((z - 960000) / 100))
+    df['day'] = df[['date']].applymap(lambda z: int(z % 100))
     return df
 
 
@@ -57,18 +83,18 @@ def load_files():
                'destinationLongitude', 'SourceState',
                'destinationState', 'distanceKM', 'taxiDurationMin',
                'vehicleType', 'vehicleOption', 'weight', 'price']]
-    x = np.reshape(x, (50000, 14))
 
     x = encode(state, x, 'SourceState')
     x = encode(state, x, 'destinationState')
     x = encode(vehicleType, x, 'vehicleType')
-    x = encode(vehicleOption, x, 'vehicleOption')
-    x = set_day(x)
+    # x = encode(vehicleOption, x, 'vehicleOption')
+    # x = set_day(x)
     x = set_month(x)
     x = x.drop(['date'], axis=1)
     # fill nan
     for column in x.columns:
-        x[column] = x[column].fillna(np.mean(x[column]))
+        if column != 'vehicleOption':
+            x[column] = x[column].fillna(np.mean(x[column]))
 
     # # normalize data
     # x = pd.concat([x[['ID']], x.loc[:, ['distanceKM', 'taxiDurationMin',
@@ -100,13 +126,11 @@ def normalize(df):
     # df = df.loc[:, ['distanceKM', 'taxiDurationMin',
     #               'vehicleType', 'vehicleOption', 'weight']]
     # print(x)
+    columns = df.columns
     df = StandardScaler().fit_transform(df)
     # x = pd.DataFrame(x, columns=['distanceKM', 'taxiDurationMin',
     #                              'vehicleType', 'vehicleOption', 'weight'])
-    df = pd.DataFrame(df, columns=['date', 'sourceLatitude', 'sourceLongitude', 'destinationLatitude',
-               'destinationLongitude', 'SourceState',
-               'destinationState', 'distanceKM', 'taxiDurationMin',
-               'vehicleType', 'vehicleOption', 'weight'])
+    df = pd.DataFrame(df, columns=columns)
     # sb.pairplot(df)
     # plt.show()
     return df
@@ -128,16 +152,16 @@ def twoD_PCA(dataFrame):
 def load_data():
     test = pd.read_csv("test.csv")
     x = test[['ID', 'date', 'sourceLatitude', 'sourceLongitude', 'destinationLatitude',
-               'destinationLongitude', 'SourceState',
-               'destinationState', 'distanceKM', 'taxiDurationMin',
-               'vehicleType', 'vehicleOption', 'weight']]
+              'destinationLongitude', 'SourceState',
+              'destinationState', 'distanceKM', 'taxiDurationMin',
+              'vehicleType', 'vehicleOption', 'weight']]
     x = np.reshape(x, (15000, 13))
 
     x = encode(vehicleType, x, 'vehicleType')
     x = encode(vehicleOption, x, 'vehicleOption')
     x = encode(state, x, 'SourceState')
     x = encode(state, x, 'destinationState')
-    x = set_day(x)
+    # x = set_day(x)
     x = set_month(x)
     x = x.drop(['date'], axis=1)
     # fill nan
@@ -162,10 +186,10 @@ def mean_absolute_percentage_error(true_y, pred_y):
 
 
 def classifier(dataFrame):
-    khavar = dataFrame[dataFrame['vehicleType'] == 0]
-    treili = dataFrame[dataFrame['vehicleType'] == 1]
-    joft = dataFrame[dataFrame['vehicleType'] == 2]
-    tak = dataFrame[dataFrame['vehicleType'] == 3]
+    khavar = dataFrame[dataFrame['vehicleType'] == 5]
+    treili = dataFrame[dataFrame['vehicleType'] == 20]
+    joft = dataFrame[dataFrame['vehicleType'] == 12]
+    tak = dataFrame[dataFrame['vehicleType'] == 10]
     return khavar, treili, joft, tak
 
 
@@ -196,7 +220,7 @@ def concat_predic_and_ID(price, id):
 
 def fill_zero(train, test):
     zero_train = train[train['distanceKM'] == 0].index
-    train.loc[list(zero_train),'distanceKM'] = 300
+    train.loc[list(zero_train), 'distanceKM'] = 300
     zero_test = test[test['distanceKM'] == 0].index
     test.loc[list(zero_test), 'distanceKM'] = 300
     return train, test
@@ -212,6 +236,7 @@ def xgboost(num, max_depth, x, y, tx, ty=None):
     xgb_model = xgb.train(params, xgb.DMatrix(x, y), num, watchlist, verbose_eval=100, maximize=False)
     pred = xgb_model.predict(xgb.DMatrix(tx), ntree_limit=xgb_model.best_ntree_limit)
     pred = [x for x in pred]
+    pred = [round(z) for z in pred]
 
     if ty is not None:
         true = ty.tolist()
@@ -220,14 +245,28 @@ def xgboost(num, max_depth, x, y, tx, ty=None):
 
 
 train, test = load_files()
-train , test = fill_zero(train, test)
+train, test = fill_zero(train, test)
+
+train = ont_hot_encoding(train)
+test = ont_hot_encoding(test)
+# train = normalize(train)
+# test = normalize(test)
+# exit()
+
 khavar, treili, joft, tak = classifier(train)
+
+true_test = load_data()
+train_x, train_y, train_id = seperate_x_from_y(train)
+test_x, test_y, test_id = seperate_x_from_y(test)
+# test_x, test_id = seperate_x_from_id(true_test)
+# pred = xgboost(450, 25, train_x, train_y, test_x, test_y)
+# exit()
+
 
 khavar_x, khavar_y, khavar_ID = seperate_x_from_y(khavar)
 treili_x, treili_y, treili_ID = seperate_x_from_y(treili)
 joft_x, joft_y, joft_ID = seperate_x_from_y(joft)
 tak_x, tak_y, tak_ID = seperate_x_from_y(tak)
-
 
 # khavar_x = normalize(khavar_x)
 # treili_x = normalize(treili_x)
@@ -241,12 +280,10 @@ treili_tx, treili_ty, treili_tID = seperate_x_from_y(treili_test)
 joft_tx, joft_ty, joft_tID = seperate_x_from_y(joft_test)
 tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
 
-
 # khavar_tx = normalize(khavar_tx)
 # treili_tx = normalize(treili_tx)
 # joft_tx = normalize(joft_tx)
 # tak_tx = normalize(tak_tx)
-
 
 
 # true_test = load_data()
@@ -259,15 +296,14 @@ tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
 
 
 pred_khavar = xgboost(350, 25, khavar_x, khavar_y, khavar_tx, khavar_ty)
-pred_khavar = [round(z) for z in pred_khavar]
+# pred_khavar = [round(z) for z in pred_khavar]
 print(pred_khavar)
 pred_treili = xgboost(300, 15, treili_x, treili_y, treili_tx, treili_ty)
-pred_treili = [round(z) for z in pred_treili]
+# pred_treili = [round(z) for z in pred_treili]
 pred_joft = xgboost(300, 15, joft_x, joft_y, joft_tx, joft_ty)
-pred_joft = [round(z) for z in pred_joft]
+# pred_joft = [round(z) for z in pred_joft]
 pred_tak = xgboost(300, 15, tak_x, tak_y, tak_tx, tak_ty)
 pred_tak = [round(z) for z in pred_tak]
-
 
 
 """Neuarl Network"""
@@ -372,7 +408,7 @@ df = pd.concat([df_khavar, df_treili])
 df = pd.concat([df, concat_predic_and_ID(pred_joft, joft_tID)])
 df = pd.concat([df, concat_predic_and_ID(pred_tak, tak_tID)])
 
+# df = concat_predic_and_ID(pred, test_id)
 df.to_csv('submisiion.csv', index=False)
-
 
 print(df.describe())

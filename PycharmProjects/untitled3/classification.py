@@ -35,9 +35,13 @@ def load_files():
 
     # train['weight'] * train['weight']
 
-    for column, i in zip(train.columns, range(len(train.columns))):
-        p = train[column] * train[column]
-        train[column + "^2"] = p
+    for column, i in zip(train.columns, range(len(x.columns))):
+        if column is 'sourceLatitude' or column is 'sourceLongitude' or \
+                column is 'destinationLatitude' or column is 'destinationLongitude' or \
+                column is 'SourceState' or column is 'destinationState' or \
+                column is 'distanceKM' or column is 'taxiDurationMin':
+            p = x[column] * x[column]
+            x[column + "^2"] = p
 
     for column, i in zip(train.columns, range(len(train.columns))):
         for column2, i in zip(train.columns, range(len(train.columns))):
