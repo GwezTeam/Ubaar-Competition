@@ -11,11 +11,11 @@ from sklearn.decomposition import PCA
 import xgboost as xgb
 
 
-vehicleType = {'treili': 0, 'khavar': 1, 'joft': 2, 'tak': 3}
-vehicleOption = {'kafi': 9, 'mosaghaf_felezi': 1, 'kompressi': 2, 'bari': 3,
-                 'labehdar': 4, 'yakhchali': 5, 'hichkodam': 6, 'mosaghaf_chadori': 7,
-                 'transit_chadori': 8}
-state = {'تهران': 1310, 'اصفهان': 230, 'فارس': 29, 'همدان': 28,
+vehicleType = {'treili': 5, 'khavar': 1, 'joft': 2, 'tak': 3}
+vehicleOption = {'kafi': 6.5, 'mosaghaf_felezi': 3.91, 'kompressi': 4.03, 'bari': 3,
+                 'labehdar': 8.1, 'yakhchali': 4.3, 'hichkodam': 1, 'mosaghaf_chadori': 3.9,
+                 'transit_chadori': 11.7}
+state = {'تهران': 31, 'اصفهان': 30, 'فارس': 29, 'همدان': 28,
                'البرز': 27, 'گیلان': 26, 'زنجان': 25, 'چهارمحال و بختیاری': 24,
                'کردستان': 23, 'کرمان': 22, 'یزد': 21, 'لرستان': 20,
                'آذربایجان شرقی': 19, 'خراسان رضوی': 18, 'کرمانشاه': 17,
@@ -260,14 +260,20 @@ def xgboost(eta, num, max_depth, x, y, tx, ty=None):
 
 
 train, test = load_files()
+# plt.scatter(train['distanceKM'], train['weight'])
+# plt.xlabel('distanceKM')
+# plt.ylabel('weight')
+# plt.show()
+# exit(0)
 train , test = fill_zero(train, test)
-khavar, treili, joft, tak = classifier(train)
-
-khavar_x, khavar_y, khavar_ID = seperate_x_from_y(khavar)
-treili_x, treili_y, treili_ID = seperate_x_from_y(treili)
-joft_x, joft_y, joft_ID = seperate_x_from_y(joft)
-tak_x, tak_y, tak_ID = seperate_x_from_y(tak)
-
+# khavar, treili, joft, tak = classifier(train)
+#
+# khavar_x, khavar_y, khavar_ID = seperate_x_from_y(khavar)
+# treili_x, treili_y, treili_ID = seperate_x_from_y(treili)
+# joft_x, joft_y, joft_ID = seperate_x_from_y(joft)
+# tak_x, tak_y, tak_ID = seperate_x_from_y(tak)
+train_x, train_y, train_ID = seperate_x_from_y(train)
+test_x, test_y, test_ID = seperate_x_from_y(test)
 
 # khavar_x = normalize(khavar_x)
 # treili_x = normalize(treili_x)
@@ -275,11 +281,11 @@ tak_x, tak_y, tak_ID = seperate_x_from_y(tak)
 # tak_x = normalize(tak_x)
 
 
-khavar_test, treili_test, joft_test, tak_test = classifier(test)
-khavar_tx, khavar_ty, khavar_tID = seperate_x_from_y(khavar_test)
-treili_tx, treili_ty, treili_tID = seperate_x_from_y(treili_test)
-joft_tx, joft_ty, joft_tID = seperate_x_from_y(joft_test)
-tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
+# khavar_test, treili_test, joft_test, tak_test = classifier(test)
+# khavar_tx, khavar_ty, khavar_tID = seperate_x_from_y(khavar_test)
+# treili_tx, treili_ty, treili_tID = seperate_x_from_y(treili_test)
+# joft_tx, joft_ty, joft_tID = seperate_x_from_y(joft_test)
+# tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
 
 
 # khavar_tx = normalize(khavar_tx)
@@ -298,15 +304,17 @@ tak_tx, tak_ty, tak_tID = seperate_x_from_y(tak_test)
 # tak_tx, tak_tID = seperate_x_from_id(tak_test)
 
 
-pred_khavar = xgboost(0.01, 350, 25, khavar_x, khavar_y, khavar_tx, khavar_ty)
-pred_khavar = [round(z) for z in pred_khavar]
-print(pred_khavar)
-pred_treili = xgboost(0.01, 300, 15, treili_x, treili_y, treili_tx, treili_ty)
-pred_treili = [round(z) for z in pred_treili]
-pred_joft = xgboost(0.005, 665, 15, joft_x, joft_y, joft_tx, joft_ty)
-pred_joft = [round(z) for z in pred_joft]
-pred_tak = xgboost(0.01, 300, 15, tak_x, tak_y, tak_tx, tak_ty)
-pred_tak = [round(z) for z in pred_tak]
+# pred_khavar = xgboost(0.01, 350, 25, khavar_x, khavar_y, khavar_tx, khavar_ty)
+# pred_khavar = [round(z) for z in pred_khavar]
+# print(pred_khavar)
+# pred_treili = xgboost(0.01, 300, 15, treili_x, treili_y, treili_tx, treili_ty)
+# pred_treili = [round(z) for z in pred_treili]
+# pred_joft = xgboost(0.005, 665, 15, joft_x, joft_y, joft_tx, joft_ty)
+# pred_joft = [round(z) for z in pred_joft]
+# pred_tak = xgboost(0.01, 300, 15, tak_x, tak_y, tak_tx, tak_ty)
+# pred_tak = [round(z) for z in pred_tak]
+pred = xgboost(0.009, 8000, 10, train_x, train_y, test_x, test_y)
+pred = [round(z) for z in pred]
 
 
 
@@ -397,20 +405,21 @@ pred_tak = [round(z) for z in pred_tak]
 # final_list = final_y_df['price'].tolist()
 # final_list = [int(x[0]) for x in final_list]
 
-
-final_list = pred_khavar + pred_treili + pred_joft + pred_tak
-test_y = khavar_ty.append(treili_ty)
-test_y = test_y.append(joft_ty)
-test_y = test_y.append(tak_ty)
+final_list = pred
+# final_list = pred_khavar + pred_treili + pred_joft + pred_tak
+# test_y = khavar_ty.append(treili_ty)
+# test_y = test_y.append(joft_ty)
+# test_y = test_y.append(tak_ty)
 # print(test_y, final_list)
 print(np.mean(np.abs((test_y - final_list) / test_y)) * 100)
 
 
-df_khavar = concat_predic_and_ID(pred_khavar, khavar_tID)
-df_treili = concat_predic_and_ID(pred_treili, treili_tID)
-df = pd.concat([df_khavar, df_treili])
-df = pd.concat([df, concat_predic_and_ID(pred_joft, joft_tID)])
-df = pd.concat([df, concat_predic_and_ID(pred_tak, tak_tID)])
+# df_khavar = concat_predic_and_ID(pred_khavar, khavar_tID)
+# df_treili = concat_predic_and_ID(pred_treili, treili_tID)
+# df = pd.concat([df_khavar, df_treili])
+# df = pd.concat([df, concat_predic_and_ID(pred_joft, joft_tID)])
+# df = pd.concat([df, concat_predic_and_ID(pred_tak, tak_tID)])
+df = concat_predic_and_ID(pred, test_ID)
 
 df.to_csv('submisiion.csv', index=False)
 
